@@ -12,7 +12,7 @@ PORT = st.secrets["email"]["port"]
 
 # App title and header
 st.set_page_config(page_title="Annalise's Gender Reveal Contest", page_icon="🎀💙", layout="centered")
-st.image("https://github.com/yourusername/repositoryname/raw/main/gender_reveal_banner.jpg", use_column_width=True)  # Replace with the actual GitHub image URL
+st.image("https://github.com/entremotivator/baby/IMG_3136.jpeg", use_column_width=True)  # Replace with the actual GitHub image URL
 st.markdown("""
     <h1 style='text-align: center; color: #ff66b2;'>🎉 Annalise's Gender Reveal Weight Contest 🎉</h1>
 """, unsafe_allow_html=True)
