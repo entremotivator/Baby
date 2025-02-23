@@ -15,6 +15,18 @@ st.set_page_config(page_title="Unlocking the Secrets to Deepening Your Intimate 
 st.markdown("""
     <h1 style='text-align: center; color: #ff66b2;'>💖 Unlocking the Secrets to Deepening Your Intimate Relationships 💖</h1>
     <h3 style='text-align: center;'>Join us on March 1st for an unforgettable event!</h3>
+    <h4 style='text-align: center;'>📅 Date: March 1st | ⏰ Time: 7:00 PM EST | 📍 Location: Zoom (link will be sent upon registration)</h4>
+    <p style='text-align: center;'>💑 Strengthen your connection, communicate effectively, and build lasting intimacy.</p>
+""", unsafe_allow_html=True)
+
+# Learning Points
+st.markdown("""
+### 🌟 What You'll Learn:
+✅ Effective Communication Techniques 💬
+✅ Understanding Love Languages ❤️
+✅ Building Emotional and Physical Intimacy 🤗
+✅ Conflict Resolution for a Stronger Bond 🕊️
+✅ Secrets to Lasting Passion 🔥
 """, unsafe_allow_html=True)
 
 # Initialize session state for storing registrations
@@ -26,13 +38,20 @@ def send_email(to_email, name):
     subject = "Event Registration Confirmation - Deepening Your Intimate Relationships"
     body = f"""
     Hello {name},
-
+    
     Thank you for registering for our event: "Unlocking the Secrets to Deepening Your Intimate Relationships."
     
     📅 Date: March 1st
-    📍 Location: [Insert Location Here]
-    ⏰ Time: [Insert Time Here]
-
+    📍 Location: Zoom (link will be sent closer to the event)
+    ⏰ Time: 7:00 PM EST
+    
+    🔥 What to Expect:
+    - Expert insights on relationship-building
+    - Interactive Q&A session
+    - Practical exercises for deeper connection
+    
+    🎁 BONUS: All attendees will receive an exclusive relationship workbook!
+    
     We're excited to have you join us!
     
     Best,
@@ -53,6 +72,7 @@ def send_email(to_email, name):
         st.error(f"Failed to send email: {e}")
 
 # Registration form
+st.subheader("🔹 Register Now!")
 with st.form("registration_form"):
     name = st.text_input("Enter your name:")
     email = st.text_input("Enter your email:")
@@ -63,8 +83,9 @@ if submit_button and name and email:
     new_entry = pd.DataFrame([[name, email]], columns=["Name", "Email"])
     st.session_state.registrations = pd.concat([st.session_state.registrations, new_entry], ignore_index=True)
     send_email(email, name)
-    st.success("Registration successful! Check your email for confirmation.")
+    st.success("🎉 Registration successful! Check your email for confirmation.")
 
 # Display registered attendees
 st.subheader("📋 Registered Attendees")
 st.dataframe(st.session_state.registrations)
+
