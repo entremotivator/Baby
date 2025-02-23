@@ -36,6 +36,22 @@ st.markdown("""
 if "registrations" not in st.session_state:
     st.session_state.registrations = pd.DataFrame(columns=["Name", "Email"])
 
+# Function to send emails
+def send_email(to_email, subject, body):
+    msg = MIMEMultipart()
+    msg["From"] = EMAIL_ADDRESS
+    msg["To"] = to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        with smtplib.SMTP(SMTP_SERVER, PORT) as server:
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
+    except Exception as e:
+        st.error("An error occurred while sending the email.")
+
 # Function to send confirmation email to the attendee
 def send_confirmation_email(to_email, name):
     subject = "🎉 You're Registered! Unlocking the Secrets to Deepening Your Intimate Relationships"
@@ -48,13 +64,6 @@ def send_confirmation_email(to_email, name):
     📅 **Date:** Friday, March 1st  
     ⏰ **Time:** 3:00 - 5:00 PM PST (Pacific Standard Time)  
     📍 **Location:** Zoom (link will be sent closer to the event)  
-
-    During this engaging and insightful session, you will:  
-    ✅ Discover the key to effective communication 💬  
-    ✅ Understand and apply love languages ❤️  
-    ✅ Deepen emotional and physical intimacy 🤗  
-    ✅ Learn conflict resolution techniques for a stronger bond 🕊️  
-    ✅ Rekindle passion and connection 🔥  
 
     🎁 **BONUS:** All attendees will receive an **exclusive relationship workbook** to continue their journey beyond the event!  
 
@@ -92,23 +101,6 @@ def send_admin_notification(name, email):
 
     send_email(ADMIN_EMAIL, subject, body)
 
-# Function to send emails
-def send_email(to_email, subject, body):
-    msg = MIMEMultipart()
-    msg["From"] = EMAIL_ADDRESS
-    msg["To"] = to_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
-
-    try:
-        with smtplib.SMTP(SMTP_SERVER, PORT) as server:
-            server.starttls()
-            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
-        st.success(f"📩 Email successfully sent to {to_email}")
-    except Exception as e:
-        st.error(f"❌ Failed to send email: {e}")
-
 # Registration form
 st.subheader("🔹 Register Now!")
 with st.form("registration_form"):
@@ -121,10 +113,8 @@ if submit_button and name and email:
     new_entry = pd.DataFrame([[name, email]], columns=["Name", "Email"])
     st.session_state.registrations = pd.concat([st.session_state.registrations, new_entry], ignore_index=True)
 
-    # Send confirmation email to attendee
+    # Send emails in the background (without frontend confirmation messages)
     send_confirmation_email(email, name)
-
-    # Send notification email to admin
     send_admin_notification(name, email)
 
     st.success("🎉 Registration successful! Check your email for confirmation.")
@@ -132,5 +122,3 @@ if submit_button and name and email:
 # Display registered attendees
 st.subheader("📋 Registered Attendees")
 st.dataframe(st.session_state.registrations)
-
-
