@@ -60,7 +60,7 @@ def send_confirmation_email(to_email, name):
     **"Unlocking the Secrets to Deepening Your Intimate Relationships"** 💖  
 
     📅 **Date:** Friday, March 1st  
-    ⏰ **Time:** 3:00 - 5:00 PM PST (Pacific Standard Time)  
+    ⏰ **Time:** 3:00 - 5:00 PM PST (Pacific Standard Time)  6:00-8:30  EST
     📍 **Location:** Zoom (link will be sent closer to the event)  
 
     🎁 **BONUS:** All attendees will receive an **exclusive relationship workbook** to continue their journey beyond the event!  
