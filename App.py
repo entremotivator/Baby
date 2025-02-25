@@ -25,11 +25,9 @@ st.markdown("""
 # Learning Points
 st.markdown("""
 ### 🌟 What You'll Learn:
-✅ Effective Communication Techniques 💬  
-✅ Understanding Love Languages ❤️  
-✅ Building Emotional and Physical Intimacy 🤗  
-✅ Conflict Resolution for a Stronger Bond 🕊️  
-✅ Secrets to Lasting Passion 🔥  
+✅ Cultivate Connection 💬     
+✅ Rekindle Passion 🕊️  
+✅ Build Trust 🔥  
 """, unsafe_allow_html=True)
 
 # Initialize session state for storing registrations
