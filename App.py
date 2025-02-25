@@ -18,7 +18,7 @@ st.set_page_config(page_title="Unlocking the Secrets to Deepening Your Intimate 
 st.markdown("""
     <h1 style='text-align: center; color: #ff66b2;'>💖 Unlocking the Secrets to Deepening Your Intimate Relationships 💖</h1>
     <h3 style='text-align: center;'>Join us on March 1st for an unforgettable event!</h3>
-    <h4 style='text-align: center;'>📅 Date: March 1st | ⏰ Time: 3:00 - 5:00 PM PST | 📍 Location: Zoom (link will be sent upon registration)</h4>
+    <h4 style='text-align: center;'>📅 Date: March 1st | ⏰ Time: 3:00 - 5:30 PM PST | 📍 Location: Zoom (link will be sent upon registration)</h4>
     <p style='text-align: center;'>💑 Strengthen your connection, communicate effectively, and build lasting intimacy.</p>
 """, unsafe_allow_html=True)
 
