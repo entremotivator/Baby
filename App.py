@@ -385,12 +385,12 @@ def send_to_n8n(form_data):
 # Contact Form
 st.markdown("<div class='section-header'><h2>📝 Claim Your FREE $5,000 Consultation Package</h2></div>", unsafe_allow_html=True)
 
-# Add logo at top of form
+# Add full-width logo at top of form
 st.markdown("""
-<div style="text-align: center; margin: 2rem 0;">
+<div style="margin: 2rem 0; width: 100%;">
     <img src="https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png" 
          alt="The ATM Agency Logo" 
-         style="max-width: 300px; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);">
+         style="width: 100%; height: auto; border-radius: 15px; box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4); border: 2px solid #ffd700;">
 </div>
 """, unsafe_allow_html=True)
 
