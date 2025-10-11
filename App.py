@@ -13,7 +13,7 @@ EMAIL_ADDRESS = st.secrets["email"]["sender_email"]
 EMAIL_PASSWORD = st.secrets["email"]["password"]
 SMTP_SERVER = st.secrets["email"]["smtp_server"]
 PORT = st.secrets["email"]["port"]
-ADMIN_EMAIL = "entremotivator@gmail.com"
+ADMIN_EMAIL = "info@entremotivator@gmail.com"
 N8N_WEBHOOK_URL = "https://agentonline-u29564.vm.elestio.app/webhook-test/Consultaientre"
 
 # App configuration
@@ -231,12 +231,15 @@ if "submissions" not in st.session_state:
     ])
 
 # Email functions
-def send_email(to_email, subject, body):
-    msg = MIMEMultipart()
+def send_email(to_email, subject, body_html):
+    msg = MIMEMultipart("alternative")
     msg["From"] = EMAIL_ADDRESS
     msg["To"] = to_email
     msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
+    
+    # Attach HTML version
+    html_part = MIMEText(body_html, "html")
+    msg.attach(html_part)
     
     try:
         with smtplib.SMTP(SMTP_SERVER, PORT) as server:
@@ -250,95 +253,356 @@ def send_email(to_email, subject, body):
 
 def send_confirmation_email(to_email, name, company):
     subject = "🎉 Your $5,000 Premium AI Consultation Package is Confirmed"
-    body = f"""
-Dear {name},
-
-🎊 CONGRATULATIONS! You've secured one of our exclusive Premium AI Consultation Packages!
-
-Your $5,000 Value Package Includes:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Comprehensive AI Readiness Assessment
-✅ Custom Project Proposal with ROI Projections
-✅ 60-Minute Strategy Session with D Hudson
-✅ Personalized AI Implementation Roadmap
-✅ 30-Day Post-Implementation Support
-
-What Happens Next:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. Check your email for the AI Readiness Questionnaire (arriving within 2 hours)
-2. Our team analyzes your business (24 hours)
-3. Receive your detailed proposal (48 hours)
-4. Schedule your strategy session
-5. Start your AI transformation!
-
-📞 CONTACT INFORMATION:
-Direct Phone: 6785589752
-Email: info@entremotivator@gmail.com
-
-🚀 READY TO GET STARTED?
-Click here to schedule your consultation now:
-👉 https://calendly.com/theatmagency/consultation
-
-Or call us directly at 6785589752 to fast-track your project!
-
-To Your Success,
-
-D Hudson & The ATM Agency Team
-📧 info@entremotivator@gmail.com
-📞 6785589752
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-THE ATM AGENCY
-AI Consulting & Automation Experts
-View Our Work: https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-P.S. - Don't wait! Schedule your call today and start saving money tomorrow.
-Book your consultation: https://calendly.com/theatmagency/consultation
-
-© 2024 The ATM Agency. All Rights Reserved.
+    body_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }}
+            .container {{
+                background-color: #ffffff;
+                border-radius: 10px;
+                padding: 30px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }}
+            .header {{
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+                color: #ffd700;
+                padding: 30px;
+                border-radius: 10px;
+                text-align: center;
+                margin-bottom: 30px;
+                border: 2px solid #ffd700;
+            }}
+            .header h1 {{
+                margin: 0;
+                color: #ffd700;
+                font-size: 28px;
+            }}
+            .section {{
+                margin: 25px 0;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                border-left: 4px solid #ffd700;
+            }}
+            .section h2 {{
+                color: #1a1a1a;
+                margin-top: 0;
+                font-size: 20px;
+            }}
+            .cta-button {{
+                display: inline-block;
+                background-color: #ffd700;
+                color: #1a1a1a;
+                padding: 15px 30px;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 18px;
+                margin: 20px 0;
+                text-align: center;
+            }}
+            .cta-button:hover {{
+                background-color: #ffed4e;
+            }}
+            .footer {{
+                background-color: #1a1a1a;
+                color: #ffd700;
+                padding: 25px;
+                border-radius: 8px;
+                text-align: center;
+                margin-top: 30px;
+                border: 2px solid #ffd700;
+            }}
+            .footer img {{
+                max-width: 100%;
+                height: auto;
+                margin: 15px 0;
+                border-radius: 8px;
+            }}
+            ul {{
+                padding-left: 20px;
+            }}
+            li {{
+                margin: 10px 0;
+            }}
+            .contact-info {{
+                background-color: #fff9e6;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 20px 0;
+                border: 1px solid #ffd700;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🎊 CONGRATULATIONS {name}!</h1>
+                <p style="font-size: 18px; margin: 10px 0;">You've Secured Your Premium AI Consultation Package!</p>
+            </div>
+            
+            <p style="font-size: 16px;">Dear {name},</p>
+            
+            <p>Welcome to The ATM Agency! We're thrilled to partner with <strong>{company}</strong> on your AI transformation journey.</p>
+            
+            <div class="section">
+                <h2>💎 Your $5,000 Value Package Includes:</h2>
+                <ul>
+                    <li><strong>✅ Comprehensive AI Readiness Assessment</strong> ($1,500 value)</li>
+                    <li><strong>✅ Custom Project Proposal with ROI Projections</strong> ($2,000 value)</li>
+                    <li><strong>✅ 60-Minute Strategy Session with D Hudson</strong> ($1,000 value)</li>
+                    <li><strong>✅ Personalized AI Implementation Roadmap</strong> ($500 value)</li>
+                    <li><strong>✅ 30-Day Post-Implementation Support</strong> (Priceless)</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>⏱️ What Happens Next:</h2>
+                <ol>
+                    <li><strong>Within 2 Hours:</strong> AI Readiness Questionnaire in your inbox</li>
+                    <li><strong>Within 24 Hours:</strong> Our team analyzes your business</li>
+                    <li><strong>Within 48 Hours:</strong> Receive your detailed proposal with ROI projections</li>
+                    <li><strong>This Week:</strong> Schedule your strategy session with D Hudson</li>
+                    <li><strong>Next 30 Days:</strong> Start your AI transformation!</li>
+                </ol>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <h2 style="color: #1a1a1a;">🚀 READY TO GET STARTED?</h2>
+                <p style="font-size: 16px; margin: 15px 0;">Don't wait for us to reach out - Schedule your consultation NOW and fast-track your project!</p>
+                <a href="https://calendly.com/theatmagency/consultation" class="cta-button">
+                    📅 SCHEDULE YOUR CONSULTATION NOW
+                </a>
+                <p style="font-size: 14px; color: #666;">Click the button above or copy this link:<br>
+                <a href="https://calendly.com/theatmagency/consultation" style="color: #1a1a1a;">https://calendly.com/theatmagency/consultation</a></p>
+            </div>
+            
+            <div class="contact-info">
+                <h3 style="margin-top: 0; color: #1a1a1a;">📞 Contact Information:</h3>
+                <p style="margin: 5px 0;"><strong>Direct Phone:</strong> <a href="tel:6785589752" style="color: #1a1a1a;">6785589752</a></p>
+                <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:info@entremotivator@gmail.com" style="color: #1a1a1a;">info@entremotivator@gmail.com</a></p>
+                <p style="margin: 15px 0 5px 0; font-size: 14px; font-style: italic;">📞 Call us directly at 6785589752 for immediate assistance!</p>
+            </div>
+            
+            <div class="footer">
+                <img src="https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png" alt="The ATM Agency" style="max-width: 400px; width: 100%;">
+                <h3 style="margin: 15px 0 5px 0;">THE ATM AGENCY</h3>
+                <p style="margin: 5px 0;">AI Consulting & Automation Experts</p>
+                <p style="margin: 5px 0;">Led by D Hudson</p>
+                <p style="margin: 20px 0 5px 0; font-size: 14px;">📧 info@entremotivator@gmail.com | 📞 6785589752</p>
+                <p style="margin: 15px 0 0 0; font-size: 12px; color: #ffd700;">© 2024 The ATM Agency. All Rights Reserved.</p>
+            </div>
+            
+            <p style="text-align: center; font-size: 14px; color: #666; margin-top: 20px; font-style: italic;">
+                P.S. - Don't wait! Schedule your call today and start saving money tomorrow.
+            </p>
+        </div>
+    </body>
+    </html>
     """
-    return send_email(to_email, subject, body)
+    return send_email(to_email, subject, body_html)
 
 def send_admin_notification(form_data):
     subject = f"🚨 New AI Lead - {form_data['company']} ({form_data['budget_range']})"
-    body = f"""
-🎯 NEW AI CONSULTING LEAD
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-👤 CONTACT:
-Name: {form_data["name"]}
-Position: {form_data["position"]}
-Email: {form_data["email"]}
-Phone: {form_data["phone"]}
-Company: {form_data["company"]}
-
-🏢 COMPANY:
-Industry: {form_data["industry"]}
-Company Size: {form_data["company_size"]}
-
-💼 PROJECT:
-Project Type: {form_data["project_type"]}
-Budget: {form_data["budget_range"]}
-Timeline: {form_data["timeline"]}
-
-📋 CHALLENGES:
-{form_data["current_challenges"]}
-
-📋 DESIRED OUTCOMES:
-{form_data["desired_outcomes"]}
-
-📅 Submitted: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}
-
-🔗 SCHEDULE CALL WITH CLIENT:
-https://calendly.com/theatmagency/consultation
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-THE ATM AGENCY - Internal Notification
-View Brand Assets: https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    body_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                max-width: 700px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }}
+            .container {{
+                background-color: #ffffff;
+                border-radius: 10px;
+                padding: 30px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }}
+            .header {{
+                background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+                color: white;
+                padding: 25px;
+                border-radius: 10px;
+                text-align: center;
+                margin-bottom: 25px;
+            }}
+            .section {{
+                margin: 20px 0;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                border-left: 4px solid #ffd700;
+            }}
+            .section h3 {{
+                margin-top: 0;
+                color: #1a1a1a;
+            }}
+            .info-row {{
+                display: flex;
+                margin: 10px 0;
+                padding: 8px;
+                background-color: white;
+                border-radius: 5px;
+            }}
+            .info-label {{
+                font-weight: bold;
+                min-width: 150px;
+                color: #1a1a1a;
+            }}
+            .info-value {{
+                color: #333;
+            }}
+            .cta-button {{
+                display: inline-block;
+                background-color: #ffd700;
+                color: #1a1a1a;
+                padding: 15px 30px;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 16px;
+                margin: 20px 0;
+                text-align: center;
+            }}
+            .priority-high {{
+                background-color: #ff4757;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                display: inline-block;
+                font-weight: bold;
+            }}
+            .footer {{
+                background-color: #1a1a1a;
+                color: #ffd700;
+                padding: 20px;
+                border-radius: 8px;
+                text-align: center;
+                margin-top: 30px;
+            }}
+            .footer img {{
+                max-width: 100%;
+                height: auto;
+                margin: 10px 0;
+                border-radius: 8px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 style="margin: 0;">🚨 NEW AI CONSULTING LEAD</h1>
+                <p style="margin: 10px 0; font-size: 18px;">High Priority - Action Required</p>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <span class="priority-high">⚡ PRIORITY LEAD - FOLLOW UP IMMEDIATELY</span>
+            </div>
+            
+            <div class="section">
+                <h3>👤 Contact Information</h3>
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">{form_data["name"]}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Position:</span>
+                    <span class="info-value">{form_data["position"]}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value"><a href="mailto:{form_data["email"]}">{form_data["email"]}</a></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value"><a href="tel:{form_data["phone"]}">{form_data["phone"]}</a></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Company:</span>
+                    <span class="info-value">{form_data["company"]}</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>🏢 Company Details</h3>
+                <div class="info-row">
+                    <span class="info-label">Industry:</span>
+                    <span class="info-value">{form_data["industry"]}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Company Size:</span>
+                    <span class="info-value">{form_data["company_size"]}</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>💼 Project Information</h3>
+                <div class="info-row">
+                    <span class="info-label">Project Type:</span>
+                    <span class="info-value">{form_data["project_type"]}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Budget Range:</span>
+                    <span class="info-value"><strong>{form_data["budget_range"]}</strong></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Timeline:</span>
+                    <span class="info-value">{form_data["timeline"]}</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>📋 Current Challenges</h3>
+                <p style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">{form_data["current_challenges"]}</p>
+            </div>
+            
+            <div class="section">
+                <h3>🎯 Desired Outcomes</h3>
+                <p style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">{form_data["desired_outcomes"]}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0; padding: 20px; background-color: #fff9e6; border-radius: 8px; border: 2px solid #ffd700;">
+                <h3 style="margin-top: 0; color: #1a1a1a;">⚡ IMMEDIATE ACTION REQUIRED</h3>
+                <p style="margin: 10px 0;">Schedule a call with this client immediately!</p>
+                <a href="https://calendly.com/theatmagency/consultation" class="cta-button">
+                    📅 SCHEDULE CLIENT CALL NOW
+                </a>
+            </div>
+            
+            <div style="background-color: #f0f0f0; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 5px 0; font-size: 14px;"><strong>📅 Submission Time:</strong> {datetime.now().strftime("%B %d, %Y at %I:%M %p")}</p>
+                <p style="margin: 5px 0; font-size: 14px;"><strong>🔔 Response Time:</strong> Contact within 24 hours for best conversion rate</p>
+            </div>
+            
+            <div class="footer">
+                <img src="https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png" alt="The ATM Agency" style="max-width: 300px; width: 100%;">
+                <h3 style="margin: 10px 0;">THE ATM AGENCY</h3>
+                <p style="margin: 5px 0; font-size: 12px;">Internal Lead Notification System</p>
+            </div>
+        </div>
+    </body>
+    </html>
     """
-    return send_email(ADMIN_EMAIL, subject, body)
+    return send_email(ADMIN_EMAIL, subject, body_html)
 
 def send_to_n8n(form_data):
     """Send form data to n8n webhook"""
