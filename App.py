@@ -13,7 +13,7 @@ EMAIL_ADDRESS = st.secrets["email"]["sender_email"]
 EMAIL_PASSWORD = st.secrets["email"]["password"]
 SMTP_SERVER = st.secrets["email"]["smtp_server"]
 PORT = st.secrets["email"]["port"]
-ADMIN_EMAIL = "info@entremotivator@gmail.com"
+ADMIN_EMAIL = "entremotivator@gmail.com"
 N8N_WEBHOOK_URL = "https://agentonline-u29564.vm.elestio.app/webhook-test/Consultaientre"
 
 # App configuration
