@@ -547,7 +547,7 @@ def send_admin_notification(form_data):
                     "🟠 HIGH" if form_data["budget_range"] in ["$50,000 - $100,000", "$25,000 - $50,000"] else \
                     "🟡 MEDIUM"
     
-    urgency_score = "IMMEDIATE ACTION REQUIRED" if form_data["timeline"] in ['ASAP', '1-2 weeks'] else "FOLLOW UP WITHIN 24 HOURS"
+    urgency_score = "IMMEDIATE ACTION REQUIRED" if form_data["timeline"] in ['ASAP - This is urgent!', 'Within 2 weeks'] else "FOLLOW UP WITHIN 24 HOURS"
     
     body = f"""
 🎯 NEW HIGH-PRIORITY AI CONSULTING LEAD
@@ -609,7 +609,7 @@ Additional Services: {form_data["additional_services"]}
 📊 LEAD QUALITY SCORE:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Budget Score: {10 if 'CRITICAL' in priority_level else 8 if 'HIGH' in priority_level else 6}/10
-Timeline Score: {10 if form_data["timeline"] in ['ASAP', '1-2 weeks'] else 7}/10
+Timeline Score: {10 if form_data["timeline"] in ['ASAP - This is urgent!', 'Within 2 weeks'] else 7}/10
 Company Size Score: {9 if '500+' in form_data["company_size"] or '200+' in form_data["company_size"] else 7}/10
 Revenue Score: {10 if '$50M' in form_data["annual_revenue"] or '$100M' in form_data["annual_revenue"] else 7}/10
 
@@ -1034,6 +1034,81 @@ with col1:
         <p>Drowning in paperwork. 40+ hours weekly on manual patient data processing. Errors costing them patients and revenue.</p>
         
         <p style="color: #27ae60; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE ATM AGENCY SOLUTION:</p>
+        <p>AI-powered intelligent document processing + automated patient management system</p>
+        
+        <p style="color: #2980b9; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE RESULTS:</p>
+        <ul style="line-height: 2;">
+            <li>✅ <strong>95% reduction</strong> in processing time</li>
+            <li>✅ <strong>$200K saved</strong> in first year alone</li>
+            <li>✅ <strong>99.8% accuracy</strong> rate (virtually error-free)</li>
+            <li>✅ <strong>ROI achieved in just 3 months</strong></li>
+            <li>✅ Staff can now focus on patient care, not paperwork</li>
+        </ul>
+        <p style="background: #d1f2eb; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-style: italic;">
+            "We went from overwhelmed to optimized in 90 days. Best decision we ever made." - Dr. Sarah M.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="feature-box">
+        <h4>🏭 Manufacturing: AutoParts Inc.</h4>
+        <p style="color: #e74c3c; font-weight: bold; font-size: 1.2em;">THE CHALLENGE:</p>
+        <p>Quality control nightmares. High defect rates. Losing contracts. Reputation at risk.</p>
+        
+        <p style="color: #27ae60; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE ATM AGENCY SOLUTION:</p>
+        <p>Computer vision AI for real-time automated quality inspection</p>
+        
+        <p style="color: #2980b9; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE RESULTS:</p>
+        <ul style="line-height: 2;">
+            <li>✅ <strong>85% faster</strong> quality checks</li>
+            <li>✅ <strong>60% reduction</strong> in defects</li>
+            <li>✅ <strong>$500K saved</strong> annually</li>
+            <li>✅ <strong>300% ROI</strong> in first year</li>
+            <li>✅ Won back lost contracts + 3 new major clients</li>
+        </ul>
+        <p style="background: #d1f2eb; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-style: italic;">
+            "Our defect rate dropped from 12% to 2%. Customers are amazed. So are we." - Michael C., COO
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Additional success stories
+col3, col4 = st.columns(2)
+
+with col3:
+    st.markdown("""
+    <div class="feature-box">
+        <h4>🛒 E-Commerce: StartupX</h4>
+        <p style="color: #e74c3c; font-weight: bold; font-size: 1.2em;">THE CHALLENGE:</p>
+        <p>Small team, big ambitions. Couldn't scale. Manual everything. Losing sales to bigger competitors.</p>
+        
+        <p style="color: #27ae60; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE ATM AGENCY SOLUTION:</p>
+        <p>Full AI automation suite: customer service, inventory, marketing, analytics</p>
+        
+        <p style="color: #2980b9; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE RESULTS:</p>
+        <ul style="line-height: 2;">
+            <li>✅ Team of 12 now operates like team of 100+</li>
+            <li>✅ <strong>400% revenue growth</strong> ($500K → $2M)</li>
+            <li>✅ Handle 10X more customers</li>
+            <li>✅ 65% higher conversion rates</li>
+            <li>✅ Outcompeting enterprise rivals</li>
+        </ul>
+        <p style="background: #d1f2eb; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-style: italic;">
+            "We're a startup punching way above our weight. All thanks to The ATM Agency." - Emma R., Founder
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col4:
+    st.markdown("""
+    <div class="feature-box">
+        <h4>💼 Consulting: TechCorp Inc.</h4>
+        <p style="color: #e74c3c; font-weight: bold; font-size: 1.2em;">THE CHALLENGE:</p>
+        <p>Customer support costs exploding. Response times too slow. Losing clients to faster competitors.</p>
+        
+        <p style="color: #27ae60; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE ATM AGENCY SOLUTION:</p>
         <p>AI-powered customer service automation + intelligent ticketing system</p>
         
         <p style="color: #2980b9; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE RESULTS:</p>
@@ -1406,78 +1481,4 @@ st.markdown("""
         <p style="margin-top: 1rem;"><strong>Call Now: 6785589752</strong> or scroll up to claim your FREE $5,000 consultation package!</p>
     </div>
 </div>
-""", unsafe_allow_html=True) SOLUTION:</p>
-        <p>AI-powered intelligent document processing + automated patient management system</p>
-        
-        <p style="color: #2980b9; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE RESULTS:</p>
-        <ul style="line-height: 2;">
-            <li>✅ <strong>95% reduction</strong> in processing time</li>
-            <li>✅ <strong>$200K saved</strong> in first year alone</li>
-            <li>✅ <strong>99.8% accuracy</strong> rate (virtually error-free)</li>
-            <li>✅ <strong>ROI achieved in just 3 months</strong></li>
-            <li>✅ Staff can now focus on patient care, not paperwork</li>
-        </ul>
-        <p style="background: #d1f2eb; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-style: italic;">
-            "We went from overwhelmed to optimized in 90 days. Best decision we ever made." - Dr. Sarah M.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-    <div class="feature-box">
-        <h4>🏭 Manufacturing: AutoParts Inc.</h4>
-        <p style="color: #e74c3c; font-weight: bold; font-size: 1.2em;">THE CHALLENGE:</p>
-        <p>Quality control nightmares. High defect rates. Losing contracts. Reputation at risk.</p>
-        
-        <p style="color: #27ae60; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE ATM AGENCY SOLUTION:</p>
-        <p>Computer vision AI for real-time automated quality inspection</p>
-        
-        <p style="color: #2980b9; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE RESULTS:</p>
-        <ul style="line-height: 2;">
-            <li>✅ <strong>85% faster</strong> quality checks</li>
-            <li>✅ <strong>60% reduction</strong> in defects</li>
-            <li>✅ <strong>$500K saved</strong> annually</li>
-            <li>✅ <strong>300% ROI</strong> in first year</li>
-            <li>✅ Won back lost contracts + 3 new major clients</li>
-        </ul>
-        <p style="background: #d1f2eb; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-style: italic;">
-            "Our defect rate dropped from 12% to 2%. Customers are amazed. So are we." - Michael C., COO
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# Additional success stories
-col3, col4 = st.columns(2)
-
-with col3:
-    st.markdown("""
-    <div class="feature-box">
-        <h4>🛒 E-Commerce: StartupX</h4>
-        <p style="color: #e74c3c; font-weight: bold; font-size: 1.2em;">THE CHALLENGE:</p>
-        <p>Small team, big ambitions. Couldn't scale. Manual everything. Losing sales to bigger competitors.</p>
-        
-        <p style="color: #27ae60; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE ATM AGENCY SOLUTION:</p>
-        <p>Full AI automation suite: customer service, inventory, marketing, analytics</p>
-        
-        <p style="color: #2980b9; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE RESULTS:</p>
-        <ul style="line-height: 2;">
-            <li>✅ Team of 12 now operates like team of 100+</li>
-            <li>✅ <strong>400% revenue growth</strong> ($500K → $2M)</li>
-            <li>✅ Handle 10X more customers</li>
-            <li>✅ 65% higher conversion rates</li>
-            <li>✅ Outcompeting enterprise rivals</li>
-        </ul>
-        <p style="background: #d1f2eb; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-style: italic;">
-            "We're a startup punching way above our weight. All thanks to The ATM Agency." - Emma R., Founder
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col4:
-    st.markdown("""
-    <div class="feature-box">
-        <h4>💼 Consulting: TechCorp Inc.</h4>
-        <p style="color: #e74c3c; font-weight: bold; font-size: 1.2em;">THE CHALLENGE:</p>
-        <p>Customer support costs exploding. Response times too slow. Losing clients to faster competitors.</p>
-        
+""", unsafe_allow_html=True)
