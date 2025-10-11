@@ -287,6 +287,12 @@ D Hudson & The ATM Agency Team
 📧 info@entremotivator@gmail.com
 📞 6785589752
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THE ATM AGENCY
+AI Consulting & Automation Experts
+View Our Work: https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 P.S. - Don't wait! Schedule your call today and start saving money tomorrow.
 Book your consultation: https://calendly.com/theatmagency/consultation
 
@@ -326,6 +332,11 @@ Timeline: {form_data["timeline"]}
 
 🔗 SCHEDULE CALL WITH CLIENT:
 https://calendly.com/theatmagency/consultation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THE ATM AGENCY - Internal Notification
+View Brand Assets: https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     """
     return send_email(ADMIN_EMAIL, subject, body)
 
@@ -373,6 +384,15 @@ def send_to_n8n(form_data):
 
 # Contact Form
 st.markdown("<div class='section-header'><h2>📝 Claim Your FREE $5,000 Consultation Package</h2></div>", unsafe_allow_html=True)
+
+# Add logo at top of form
+st.markdown("""
+<div style="text-align: center; margin: 2rem 0;">
+    <img src="https://entremotivator.com/wp-content/uploads/2025/10/IMG_0319.png" 
+         alt="The ATM Agency Logo" 
+         style="max-width: 300px; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);">
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <div class="info-card">
