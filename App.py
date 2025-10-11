@@ -1481,4 +1481,3 @@ with col4:
         <p style="color: #e74c3c; font-weight: bold; font-size: 1.2em;">THE CHALLENGE:</p>
         <p>Customer support costs exploding. Response times too slow. Losing clients to faster competitors.</p>
         
-        <p style="color: #27ae60; font-weight: bold; font-size: 1.2em; margin-top: 1rem;">THE ATM AGENCY
