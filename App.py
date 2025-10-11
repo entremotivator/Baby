@@ -20,7 +20,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS
+# Custom CSS - Gold & Black Theme
 st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
@@ -28,61 +28,106 @@ st.markdown("""
     header {visibility: hidden;}
     
     .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         padding: 2.5rem;
         border-radius: 15px;
         margin-bottom: 2rem;
         text-align: center;
-        color: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        color: #ffd700;
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        border: 2px solid #ffd700;
+    }
+    .main-header h1, .main-header h2, .main-header h3 {
+        color: #ffd700;
+    }
+    .main-header p {
+        color: #ffffff;
     }
     .section-header {
-        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         padding: 1.2rem;
         border-radius: 10px;
-        color: white;
+        color: #ffd700;
         margin: 2rem 0 1.5rem 0;
         text-align: center;
         font-weight: bold;
+        border: 2px solid #ffd700;
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+    }
+    .section-header h2 {
+        color: #ffd700;
+        margin: 0;
     }
     .info-card {
-        background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+        background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
         padding: 2rem;
         border-radius: 12px;
-        border-left: 5px solid #4facfe;
+        border-left: 5px solid #ffd700;
         margin: 1rem 0;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        color: #ffffff;
+    }
+    .info-card h3 {
+        color: #ffd700;
     }
     .feature-box {
-        background: #ffffff;
+        background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
         padding: 2rem;
         border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
         margin: 1rem 0;
-        border-top: 4px solid #4facfe;
+        border: 2px solid #ffd700;
         height: 100%;
+        color: #ffffff;
+    }
+    .feature-box h3 {
+        color: #ffd700;
+    }
+    .feature-box ul {
+        color: #ffffff;
     }
     .urgency-banner {
-        background: linear-gradient(90deg, #ff4757 0%, #ff6348 100%);
-        color: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: #ffd700;
         padding: 1.5rem;
         border-radius: 10px;
         text-align: center;
         margin: 1rem 0;
         font-weight: bold;
         animation: pulse 2s infinite;
+        border: 3px solid #ffd700;
+        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
     }
     @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.02); }
+        0%, 100% { transform: scale(1); box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); }
+        50% { transform: scale(1.02); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6); }
     }
     .cta-section {
-        background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         padding: 3rem;
         border-radius: 15px;
         text-align: center;
         margin: 2rem 0;
-        color: white;
+        color: #ffd700;
+        border: 3px solid #ffd700;
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+    }
+    .cta-section h2 {
+        color: #ffd700;
+    }
+    .cta-section p {
+        color: #ffffff;
+    }
+    /* Style metrics */
+    [data-testid="stMetricValue"] {
+        color: #ffd700;
+        font-weight: bold;
+    }
+    [data-testid="stMetricLabel"] {
+        color: #ffffff;
+    }
+    [data-testid="stMetricDelta"] {
+        color: #ffd700;
     }
 </style>
 """, unsafe_allow_html=True)
