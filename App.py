@@ -202,6 +202,47 @@ def send_consult_admin_alert(form: dict) -> bool:
     return _send_email(ADMIN_EMAIL, subject, body)
 
 
+# ── Vote email ──────────────────────────────
+def send_vote_admin_alert(voter_name: str, voter_email: str, city: str, why: str, also_attend: bool) -> bool:
+    subject = f"🗳 NEW CITY VOTE — {city} | {voter_name} | The AI Meet Up Tour"
+    attend_txt = "✅ YES — would attend" if also_attend else "❌ Not confirmed"
+    body = f"""
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  body{{font-family:Arial,sans-serif;background:#f4f4f4;color:#333;margin:0;padding:20px;}}
+  .wrap{{max-width:580px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);}}
+  .hdr{{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:#ffd700;padding:22px;text-align:center;border-bottom:3px solid #ffd700;}}
+  .hdr h1{{margin:0;font-size:20px;color:#ffd700;}}
+  .body{{padding:26px;}}
+  .row{{display:flex;padding:8px 0;border-bottom:1px solid #eee;}}
+  .lbl{{font-weight:700;color:#555;min-width:150px;}}
+  .val{{color:#222;}}
+  .city-badge{{background:linear-gradient(135deg,#ffd700,#ffaa00);color:#0d0d0d;font-weight:900;
+               font-size:1.4rem;padding:0.6rem 1.5rem;border-radius:50px;display:inline-block;margin:12px 0;}}
+  .ftr{{background:#1a1a1a;color:#ffd700;padding:16px;text-align:center;font-size:12px;}}
+</style></head><body>
+<div class="wrap">
+  <div class="hdr"><h1>🗳 NEW CITY TOUR VOTE</h1>
+    <p style="margin:4px 0;color:#fff;">The AI Meet Up City Tour</p>
+  </div>
+  <div class="body">
+    <p style="text-align:center;"><span class="city-badge">📍 {city}</span></p>
+    <div class="row"><span class="lbl">Voter Name:</span><span class="val">{voter_name}</span></div>
+    <div class="row"><span class="lbl">Email:</span><span class="val"><a href="mailto:{voter_email}">{voter_email}</a></span></div>
+    <div class="row"><span class="lbl">City Voted For:</span><span class="val"><strong>{city}</strong></span></div>
+    <div class="row"><span class="lbl">Would Attend:</span><span class="val">{attend_txt}</span></div>
+    <div class="row"><span class="lbl">Why This City:</span><span class="val">{why if why else '(no comment)'}</span></div>
+    <p style="font-size:12px;color:#888;margin-top:14px;">
+      Submitted: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}
+    </p>
+  </div>
+  <div class="ftr">The AI Meet Up &nbsp;|&nbsp; City Tour Vote &nbsp;|&nbsp; EntreMotivator.com</div>
+</div>
+</body></html>
+"""
+    return _send_email(ADMIN_EMAIL, subject, body)
+
+
 # ── RSVP emails ──────────────────────────────
 def send_rsvp_confirmation(to_email: str, name: str) -> bool:
     subject = "🎟 You're Registered! The AI Meet Up — March 27, 2026"
@@ -652,7 +693,25 @@ with tab3:
             else:
                 st.session_state.city_votes[city_choice] += 1
                 st.session_state.voted_city = city_choice
+
+                # Send vote notification to admin
+                vote_sent = send_vote_admin_alert(
+                    voter_name, voter_email, city_choice, why_vote, also_attend
+                )
+                # Also forward to n8n
+                send_to_n8n({
+                    "type": "city_vote",
+                    "voter_name": voter_name,
+                    "voter_email": voter_email,
+                    "city": city_choice,
+                    "why": why_vote,
+                    "would_attend": also_attend,
+                    "submission_date": datetime.now().isoformat()
+                })
+
                 st.success(f"✅ Vote cast for **{city_choice}**! Thank you, {voter_name}!")
+                if EMAIL_ENABLED and vote_sent:
+                    st.toast(f"📧 Vote notification sent to {ADMIN_EMAIL}", icon="🗳")
                 st.balloons()
 
     with col_results:
