@@ -243,6 +243,106 @@ def send_vote_admin_alert(voter_name: str, voter_email: str, city: str, why: str
     return _send_email(ADMIN_EMAIL, subject, body)
 
 
+# ── CRM / App Dev / Voice Assistant admin alert emails ──────────────
+def _generic_consult_admin_email(form: dict, service_title: str, icon: str) -> bool:
+    """Reusable admin alert for any consultation type."""
+    subject = f"{icon} NEW {service_title.upper()} REQUEST — {form['name']} | {form['company']}"
+    rows_html = "".join(
+        f'<div class="row"><span class="lbl">{k}:</span><span class="val">{v}</span></div>'
+        for k, v in form.items() if k not in ["submission_date", "type"]
+    )
+    body = f"""
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  body{{font-family:Arial,sans-serif;background:#f4f4f4;color:#333;margin:0;padding:20px;}}
+  .wrap{{max-width:640px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);}}
+  .hdr{{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:#ffd700;padding:24px;text-align:center;border-bottom:3px solid #ffd700;}}
+  .hdr h1{{margin:0;font-size:22px;color:#ffd700;}}
+  .body{{padding:28px;}}
+  .row{{display:flex;padding:8px 0;border-bottom:1px solid #eee;flex-wrap:wrap;}}
+  .lbl{{font-weight:700;color:#555;min-width:180px;text-transform:capitalize;}}
+  .val{{color:#222;flex:1;}}
+  .priority{{background:#fff3cd;border:2px solid #ffd700;border-radius:8px;padding:12px;
+             text-align:center;font-weight:800;font-size:14px;color:#856404;margin:14px 0;}}
+  .btn{{display:inline-block;background:linear-gradient(135deg,#ffd700,#ffaa00);color:#1a1a1a;
+        font-weight:800;padding:12px 28px;border-radius:50px;text-decoration:none;font-size:14px;}}
+  .ftr{{background:#1a1a1a;color:#ffd700;padding:16px;text-align:center;font-size:12px;}}
+</style></head><body>
+<div class="wrap">
+  <div class="hdr"><h1>{icon} {service_title} — New Request</h1>
+    <p style="margin:4px 0;color:#fff;">The AI Meet Up | EntreMotivator</p>
+  </div>
+  <div class="body">
+    <div class="priority">⚡ PRIORITY LEAD — FOLLOW UP WITHIN 24 HOURS ⚡</div>
+    {rows_html}
+    <p style="text-align:center;margin-top:20px;">
+      <a href="mailto:{form['email']}" class="btn">📧 Reply to Lead Now</a>
+    </p>
+    <p style="font-size:12px;color:#888;margin-top:14px;">
+      Submitted: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}
+    </p>
+  </div>
+  <div class="ftr">The AI Meet Up &nbsp;|&nbsp; {service_title} &nbsp;|&nbsp; EntreMotivator.com</div>
+</div>
+</body></html>
+"""
+    return _send_email(ADMIN_EMAIL, subject, body)
+
+
+def _generic_consult_confirmation(to_email: str, name: str, service_title: str, icon: str, bullets: list) -> bool:
+    """Reusable confirmation email to the lead."""
+    subject = f"{icon} Your {service_title} Request Received — We'll Reach Out in 24 Hours!"
+    bullets_html = "".join(f"<li>{b}</li>" for b in bullets)
+    body = f"""
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  body{{font-family:Arial,sans-serif;background:#f4f4f4;color:#333;margin:0;padding:20px;}}
+  .wrap{{max-width:600px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);}}
+  .hdr{{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:#ffd700;padding:30px;text-align:center;border-bottom:3px solid #ffd700;}}
+  .hdr h1{{margin:0;font-size:24px;color:#ffd700;}}
+  .body{{padding:30px;}}
+  .card{{background:#f9f9f9;border-left:4px solid #ffd700;border-radius:8px;padding:16px;margin:16px 0;}}
+  .btn{{display:inline-block;background:linear-gradient(135deg,#ffd700,#ffaa00);color:#1a1a1a;font-weight:800;
+        padding:14px 32px;border-radius:50px;text-decoration:none;font-size:15px;margin:18px 0;}}
+  .ftr{{background:#1a1a1a;color:#ffd700;padding:20px;text-align:center;font-size:13px;}}
+</style></head><body>
+<div class="wrap">
+  <div class="hdr">
+    <h1>{icon} {service_title}</h1>
+    <p style="margin:6px 0;color:#fff;">Request Confirmed!</p>
+  </div>
+  <div class="body">
+    <p>Hi <strong>{name}</strong>,</p>
+    <p>Your <strong style="color:#b8860b;">{service_title}</strong> request has been received!
+       Our team will reach out within <strong>24 hours</strong> to discuss your project.</p>
+    <div class="card">
+      <h3>🎁 What to Expect:</h3>
+      <ul>{bullets_html}</ul>
+    </div>
+    <div class="card">
+      <h3>⏭ What Happens Next?</h3>
+      <ol>
+        <li>Our team reviews your submission</li>
+        <li>We reach out within <strong>24 hours</strong></li>
+        <li>We schedule a discovery call</li>
+        <li>We present a custom solution &amp; proposal</li>
+      </ol>
+    </div>
+    <p style="text-align:center;">
+      <a href="{EVENT_URL}" class="btn">🌐 Visit Our Event Page</a>
+    </p>
+    <p>Questions? Email <a href="mailto:{ADMIN_EMAIL}">{ADMIN_EMAIL}</a>
+       or call <a href="tel:{PHONE}">{PHONE}</a>.</p>
+  </div>
+  <div class="ftr">
+    🤖 The AI Meet Up &nbsp;|&nbsp; EntreMotivator &nbsp;|&nbsp; {ADMIN_EMAIL}
+  </div>
+</div>
+</body></html>
+"""
+    return _send_email(to_email, subject, body)
+
+
 # ── RSVP emails ──────────────────────────────
 def send_rsvp_confirmation(to_email: str, name: str) -> bool:
     subject = "🎟 You're Registered! The AI Meet Up — March 27, 2026"
@@ -517,11 +617,14 @@ c4.metric("Next Event", "Mar 27, 2026", "Register Now")
 # ─────────────────────────────────────────────
 # TABS
 # ─────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "🎨 Flyer & About",
     "🗓 Today's Agenda",
     "🗳 Vote Your City",
     "💼 Free Consultation",
+    "🤖 AI CRM System",
+    "📱 Custom App Dev",
+    "🎙 AI Voice Assistant",
     "🎟 Sign Up — Next Event",
 ])
 
@@ -915,7 +1018,415 @@ with tab4:
                 st.rerun()
 
 # ══════════════════════════════════════════════
-# TAB 5 — SIGN UP FOR NEXT EVENT  (LAST TAB)
+# TAB 6 — AI CRM SYSTEM CONSULTATION
+# ══════════════════════════════════════════════
+with tab6:
+    st.markdown("<div class='section-hdr'><h2>🤖 Custom AI CRM System Consultation</h2></div>",
+                unsafe_allow_html=True)
+    st.markdown("""
+<div class="consult-banner">
+    <h2>🤖 Custom AI CRM System</h2>
+    <div class="price">FREE Discovery Call</div>
+    <div class="tagline">Tell us about your business — we’ll build a CRM powered by AI<br>
+    that automates follow-ups, tracks leads, and closes more deals.</div>
+</div>
+""", unsafe_allow_html=True)
+
+    crm_features = [
+        ("📊", "Lead Pipeline", "Visual pipeline with AI lead scoring"),
+        ("🤖", "AI Follow-Ups", "Automated email & SMS sequences"),
+        ("💬", "AI Chat", "Chatbot integrated into your CRM"),
+        ("📈", "Analytics", "Real-time dashboards & reporting"),
+        ("🔗", "Integrations", "Connect to your existing tools"),
+        ("🔐", "Custom Roles", "Team permissions & access control"),
+    ]
+    fcols = st.columns(6)
+    for col, (icon, title, desc) in zip(fcols, crm_features):
+        with col:
+            st.markdown(f"""
+<div class="feature-box">
+    <div class="icon">{icon}</div>
+    <h3>{title}</h3>
+    <p>{desc}</p>
+</div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    if st.session_state.get("crm_submitted"):
+        st.success("🎉 CRM consultation request received! Our team will reach out within 24 hours.")
+    else:
+        with st.form("crm_form"):
+            st.markdown("### 👤 Contact Information")
+            c1, c2 = st.columns(2)
+            with c1:
+                crm_name    = st.text_input("Full Name *",        placeholder="Your full name")
+                crm_email   = st.text_input("Business Email *",   placeholder="you@company.com")
+                crm_phone   = st.text_input("Phone Number *",     placeholder="678-555-0000")
+            with c2:
+                crm_company = st.text_input("Company Name *",     placeholder="Your company")
+                crm_title   = st.text_input("Job Title *",        placeholder="CEO, Sales Manager...")
+                crm_industry = st.selectbox("Industry *",
+                    ["Select...", "Real Estate", "Insurance", "Healthcare", "Finance",
+                     "E-commerce", "Marketing Agency", "Coaching/Consulting",
+                     "SaaS", "Retail", "Other"])
+
+            st.markdown("---")
+            st.markdown("### 🏛 Current CRM Setup")
+            d1, d2 = st.columns(2)
+            with d1:
+                crm_current  = st.selectbox("Current CRM (if any) *",
+                    ["Select...", "None / Spreadsheets", "HubSpot", "Salesforce",
+                     "GoHighLevel", "Zoho", "Pipedrive", "Monday.com", "Other"])
+                crm_team_size = st.selectbox("Sales Team Size *",
+                    ["Select...", "Solo", "2–5", "6–15", "16–50", "50+"])
+                crm_leads    = st.selectbox("Monthly Leads Volume *",
+                    ["Select...", "Under 50", "50–200", "200–500", "500–1,000", "1,000+"])
+            with d2:
+                crm_pain     = st.multiselect("Biggest CRM Pain Points *",
+                    ["Manual data entry", "Poor follow-up", "No automation",
+                     "Lack of reporting", "Too expensive", "Hard to use",
+                     "No AI features", "Poor integrations"])
+                crm_features_wanted = st.multiselect("Must-Have Features *",
+                    ["AI Lead Scoring", "Automated Follow-Ups", "Email Sequences",
+                     "SMS Automation", "Pipeline Management", "AI Chatbot",
+                     "Reporting Dashboard", "Mobile App", "Team Collaboration",
+                     "Third-Party Integrations"])
+                crm_budget   = st.selectbox("Monthly Budget *",
+                    ["Select...", "Under $200/mo", "$200–$500/mo",
+                     "$500–$1,500/mo", "$1,500–$5,000/mo", "$5,000+/mo"])
+
+            st.markdown("---")
+            st.markdown("### 📝 Project Details")
+            crm_goals    = st.text_area("What goals should the CRM help you achieve? *",
+                placeholder="e.g. Close 30% more deals, automate follow-ups, track team performance...", height=90)
+            crm_timeline = st.selectbox("When do you want to launch? *",
+                ["Select...", "ASAP", "Within 1 month", "1–3 months", "3–6 months", "Just exploring"])
+            crm_integrations = st.text_input("Tools to integrate with?",
+                placeholder="e.g. Gmail, Zapier, Stripe, Calendly, WhatsApp...")
+            crm_notes    = st.text_area("Anything else we should know?", height=70)
+            crm_consent  = st.checkbox("I agree to receive communications from EntreMotivator / The ATM Agency", value=True)
+
+            crm_submit = st.form_submit_button(
+                "🤖 Request My FREE AI CRM Consultation — Team Reaches Out in 24 Hours!",
+                use_container_width=True)
+
+        if crm_submit:
+            if not all([crm_name, crm_email, crm_phone, crm_company, crm_title]):
+                st.error("⚠️ Please fill in all required contact fields.")
+            elif "@" not in crm_email:
+                st.error("⚠️ Please enter a valid email address.")
+            elif crm_current == "Select..." or crm_team_size == "Select..." or crm_budget == "Select...":
+                st.error("⚠️ Please complete all dropdown selections.")
+            elif not crm_goals:
+                st.error("⚠️ Please describe your CRM goals.")
+            elif not crm_consent:
+                st.error("⚠️ Please agree to receive communications.")
+            else:
+                form_data = {
+                    "type": "AI CRM System Consultation",
+                    "name": crm_name, "email": crm_email, "phone": crm_phone,
+                    "company": crm_company, "title": crm_title, "industry": crm_industry,
+                    "current_crm": crm_current, "team_size": crm_team_size,
+                    "monthly_leads": crm_leads, "pain_points": ", ".join(crm_pain),
+                    "features_wanted": ", ".join(crm_features_wanted),
+                    "budget": crm_budget, "goals": crm_goals,
+                    "timeline": crm_timeline, "integrations": crm_integrations,
+                    "notes": crm_notes, "submission_date": datetime.now().isoformat()
+                }
+                send_to_n8n(form_data)
+                _generic_consult_admin_email(form_data, "Custom AI CRM System", "🤖")
+                _generic_consult_confirmation(crm_email, crm_name, "Custom AI CRM System", "🤖",
+                    ["Custom AI-powered CRM built for your business",
+                     "Automated lead follow-up & email/SMS sequences",
+                     "AI lead scoring & pipeline management",
+                     "Full onboarding & team training included",
+                     "Ongoing support & optimization"])
+                st.session_state["crm_submitted"] = True
+                st.rerun()
+
+# ══════════════════════════════════════════════
+# TAB 7 — CUSTOM APP DEV CONSULTATION
+# ══════════════════════════════════════════════
+with tab7:
+    st.markdown("<div class='section-hdr'><h2>📱 Custom App Development Consultation</h2></div>",
+                unsafe_allow_html=True)
+    st.markdown("""
+<div class="consult-banner">
+    <h2>📱 Custom App Development</h2>
+    <div class="price">FREE Discovery Call</div>
+    <div class="tagline">Web apps, mobile apps, AI-powered tools — built custom for your business.<br>
+    From idea to launch, we handle everything.</div>
+</div>
+""", unsafe_allow_html=True)
+
+    app_features = [
+        ("🌐", "Web Apps", "Responsive, scalable web applications"),
+        ("📱", "Mobile Apps", "iOS & Android native or cross-platform"),
+        ("🤖", "AI Features", "LLMs, chatbots, automation built-in"),
+        ("🔧", "API & Backend", "Secure APIs and database architecture"),
+        ("🎨", "UI/UX Design", "Beautiful, intuitive user interfaces"),
+        ("🚀", "Launch & Scale", "Deployment, hosting & ongoing support"),
+    ]
+    fcols = st.columns(6)
+    for col, (icon, title, desc) in zip(fcols, app_features):
+        with col:
+            st.markdown(f"""
+<div class="feature-box">
+    <div class="icon">{icon}</div>
+    <h3>{title}</h3>
+    <p>{desc}</p>
+</div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    if st.session_state.get("app_submitted"):
+        st.success("🎉 App development request received! Our team will reach out within 24 hours.")
+    else:
+        with st.form("app_dev_form"):
+            st.markdown("### 👤 Contact Information")
+            a1, a2 = st.columns(2)
+            with a1:
+                app_name    = st.text_input("Full Name *",       placeholder="Your full name")
+                app_email   = st.text_input("Business Email *",  placeholder="you@company.com")
+                app_phone   = st.text_input("Phone Number *",    placeholder="678-555-0000")
+            with a2:
+                app_company = st.text_input("Company Name *",    placeholder="Your company")
+                app_title   = st.text_input("Job Title *",       placeholder="CEO, Founder...")
+                app_industry = st.selectbox("Industry *",
+                    ["Select...", "E-commerce", "Healthcare", "Finance", "Education",
+                     "Real Estate", "Entertainment", "Fitness & Wellness",
+                     "Food & Restaurant", "Non-Profit", "Other"])
+
+            st.markdown("---")
+            st.markdown("### 📱 App Details")
+            b1, b2 = st.columns(2)
+            with b1:
+                app_type     = st.selectbox("App Type *",
+                    ["Select...", "Web App", "Mobile App (iOS & Android)",
+                     "Mobile App (iOS only)", "Mobile App (Android only)",
+                     "Web + Mobile", "AI Tool / SaaS", "Internal Business Tool",
+                     "E-commerce Platform", "Not Sure Yet"])
+                app_platform = st.multiselect("Target Platform(s) *",
+                    ["Web Browser", "iPhone / iOS", "Android",
+                     "Desktop (Windows/Mac)", "Tablet"])
+                app_users    = st.selectbox("Expected Users *",
+                    ["Select...", "Internal team only", "Under 100 users",
+                     "100–1,000 users", "1,000–10,000 users", "10,000+ users"])
+            with b2:
+                app_ai_features = st.multiselect("AI Features Needed?",
+                    ["AI Chatbot", "Voice Assistant", "Image Recognition",
+                     "Recommendation Engine", "Predictive Analytics",
+                     "Natural Language Processing", "Automation Workflows",
+                     "Content Generation", "None / Not Sure"])
+                app_budget   = st.selectbox("Project Budget *",
+                    ["Select...", "Under $5,000", "$5,000–$15,000",
+                     "$15,000–$50,000", "$50,000–$100,000", "$100,000+",
+                     "Monthly retainer preferred"])
+                app_timeline = st.selectbox("Desired Launch Timeline *",
+                    ["Select...", "ASAP (under 4 weeks)", "1–3 months",
+                     "3–6 months", "6–12 months", "Flexible"])
+
+            st.markdown("---")
+            st.markdown("### 📝 Project Vision")
+            app_description = st.text_area("Describe your app idea *",
+                placeholder="What does the app do? Who is it for? What problem does it solve?",
+                height=100)
+            app_competitors = st.text_input("Similar apps or competitors?",
+                placeholder="e.g. Uber for X, Airbnb for Y, or custom with no comparison")
+            app_existing    = st.selectbox("Do you have an existing app or prototype?",
+                ["Select...", "No — starting from scratch", "Yes — wireframes/mockups only",
+                 "Yes — existing app needing rebuild", "Yes — MVP needing features added"])
+            app_integrations = st.text_input("Integrations needed?",
+                placeholder="e.g. Stripe, Twilio, Google Maps, OpenAI, Shopify...")
+            app_notes       = st.text_area("Any other requirements or questions?", height=70)
+            app_consent     = st.checkbox(
+                "I agree to receive communications from EntreMotivator / The ATM Agency", value=True)
+
+            app_submit = st.form_submit_button(
+                "📱 Request My FREE App Dev Consultation — Team Reaches Out in 24 Hours!",
+                use_container_width=True)
+
+        if app_submit:
+            if not all([app_name, app_email, app_phone, app_company, app_title]):
+                st.error("⚠️ Please fill in all required contact fields.")
+            elif "@" not in app_email:
+                st.error("⚠️ Please enter a valid email address.")
+            elif app_type == "Select..." or app_budget == "Select..." or app_timeline == "Select...":
+                st.error("⚠️ Please complete all dropdown selections.")
+            elif not app_description:
+                st.error("⚠️ Please describe your app idea.")
+            elif not app_consent:
+                st.error("⚠️ Please agree to receive communications.")
+            else:
+                form_data = {
+                    "type": "Custom App Development",
+                    "name": app_name, "email": app_email, "phone": app_phone,
+                    "company": app_company, "title": app_title, "industry": app_industry,
+                    "app_type": app_type, "platforms": ", ".join(app_platform),
+                    "expected_users": app_users, "ai_features": ", ".join(app_ai_features),
+                    "budget": app_budget, "timeline": app_timeline,
+                    "description": app_description, "competitors": app_competitors,
+                    "existing_app": app_existing, "integrations": app_integrations,
+                    "notes": app_notes, "submission_date": datetime.now().isoformat()
+                }
+                send_to_n8n(form_data)
+                _generic_consult_admin_email(form_data, "Custom App Development", "📱")
+                _generic_consult_confirmation(app_email, app_name, "Custom App Development", "📱",
+                    ["Custom web or mobile app built for your exact needs",
+                     "AI features integrated (chatbot, automation, analytics)",
+                     "Full UI/UX design included",
+                     "Secure backend, API & database architecture",
+                     "Launch support, hosting setup & ongoing maintenance"])
+                st.session_state["app_submitted"] = True
+                st.rerun()
+
+# ══════════════════════════════════════════════
+# TAB 7 (tab8 var) — AI VOICE ASSISTANT CONSULTATION
+# ══════════════════════════════════════════════
+with tab8:
+    st.markdown("<div class='section-hdr'><h2>🎙 AI Voice Assistant Consultation</h2></div>",
+                unsafe_allow_html=True)
+    st.markdown("""
+<div class="consult-banner">
+    <h2>🎙 AI Voice Assistant</h2>
+    <div class="price">FREE Discovery Call</div>
+    <div class="tagline">Deploy a 24/7 AI voice agent that answers calls, books appointments,<br>
+    qualifies leads, and handles customer service — automatically.</div>
+</div>
+""", unsafe_allow_html=True)
+
+    voice_features = [
+        ("📞", "Inbound Calls", "Answers & routes calls 24/7"),
+        ("📅", "Booking", "Books appointments automatically"),
+        ("🌟", "Lead Qualify", "Qualifies & scores leads by voice"),
+        ("💬", "FAQ Bot", "Answers common questions instantly"),
+        ("🔄", "Follow-Ups", "Outbound follow-up calls & reminders"),
+        ("📊", "Analytics", "Call transcripts, summaries & insights"),
+    ]
+    fcols = st.columns(6)
+    for col, (icon, title, desc) in zip(fcols, voice_features):
+        with col:
+            st.markdown(f"""
+<div class="feature-box">
+    <div class="icon">{icon}</div>
+    <h3>{title}</h3>
+    <p>{desc}</p>
+</div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    if st.session_state.get("voice_submitted"):
+        st.success("🎉 AI Voice Assistant request received! Our team will reach out within 24 hours.")
+    else:
+        with st.form("voice_form"):
+            st.markdown("### 👤 Contact Information")
+            v1, v2 = st.columns(2)
+            with v1:
+                voice_name    = st.text_input("Full Name *",       placeholder="Your full name")
+                voice_email   = st.text_input("Business Email *",  placeholder="you@company.com")
+                voice_phone   = st.text_input("Phone Number *",    placeholder="678-555-0000")
+            with v2:
+                voice_company = st.text_input("Company Name *",    placeholder="Your company")
+                voice_title   = st.text_input("Job Title *",       placeholder="CEO, Founder...")
+                voice_industry = st.selectbox("Industry *",
+                    ["Select...", "Real Estate", "Healthcare / Medical", "Legal",
+                     "Home Services", "Insurance", "Restaurants / Food",
+                     "Retail", "E-commerce", "Coaching/Consulting",
+                     "Automotive", "Finance", "Other"])
+
+            st.markdown("---")
+            st.markdown("### 📞 Current Phone & Communication Setup")
+            w1, w2 = st.columns(2)
+            with w1:
+                voice_current  = st.selectbox("Current phone system? *",
+                    ["Select...", "Personal cell phone", "Business landline",
+                     "VoIP (RingCentral, Vonage, etc.)", "Google Voice",
+                     "No dedicated system", "Other"])
+                voice_call_vol = st.selectbox("Monthly call volume? *",
+                    ["Select...", "Under 50 calls", "50–200 calls",
+                     "200–500 calls", "500–1,000 calls", "1,000+ calls"])
+                voice_missed   = st.selectbox("Missed calls per month? *",
+                    ["Select...", "Almost none", "A few (1–10)",
+                     "Some (10–50)", "Many (50+)", "Not sure"])
+            with w2:
+                voice_use_cases = st.multiselect("Primary use cases? *",
+                    ["Answer inbound calls", "Book appointments",
+                     "Qualify leads", "Customer support / FAQ",
+                     "Outbound follow-up calls", "Appointment reminders",
+                     "After-hours coverage", "Overflow call handling",
+                     "Order status updates"])
+                voice_languages = st.multiselect("Languages needed?",
+                    ["English", "Spanish", "French", "Portuguese",
+                     "Mandarin", "Other"])
+                voice_budget   = st.selectbox("Monthly Budget *",
+                    ["Select...", "Under $100/mo", "$100–$300/mo",
+                     "$300–$800/mo", "$800–$2,000/mo", "$2,000+/mo"])
+
+            st.markdown("---")
+            st.markdown("### 📝 Voice Assistant Details")
+            voice_persona  = st.text_input("Preferred assistant name & personality?",
+                placeholder="e.g. 'Alex' — professional and friendly, or 'Sam' — energetic and casual")
+            voice_script   = st.text_area("What should the assistant say when answering calls? *",
+                placeholder="e.g. 'Thank you for calling [Company]! My name is Alex. How can I help you today?'",
+                height=90)
+            voice_faqs     = st.text_area("Top 5 questions callers ask most?",
+                placeholder="1. What are your hours?\n2. How do I book an appointment?\n3. ...",
+                height=100)
+            voice_calendar = st.selectbox("Calendar / booking system to integrate?",
+                ["Select...", "Google Calendar", "Calendly", "Acuity Scheduling",
+                 "Square Appointments", "HubSpot", "GoHighLevel",
+                 "None yet", "Other"])
+            voice_crm      = st.text_input("CRM to sync with?",
+                placeholder="e.g. HubSpot, Salesforce, GoHighLevel, Spreadsheet...")
+            voice_timeline = st.selectbox("When do you want to go live? *",
+                ["Select...", "ASAP", "Within 2 weeks", "Within 1 month",
+                 "1–3 months", "Just exploring"])
+            voice_notes    = st.text_area("Anything else we should know?", height=70)
+            voice_consent  = st.checkbox(
+                "I agree to receive communications from EntreMotivator / The ATM Agency", value=True)
+
+            voice_submit = st.form_submit_button(
+                "🎙 Request My FREE AI Voice Assistant Consultation — Team Reaches Out in 24 Hours!",
+                use_container_width=True)
+
+        if voice_submit:
+            if not all([voice_name, voice_email, voice_phone, voice_company, voice_title]):
+                st.error("⚠️ Please fill in all required contact fields.")
+            elif "@" not in voice_email:
+                st.error("⚠️ Please enter a valid email address.")
+            elif voice_current == "Select..." or voice_call_vol == "Select..." or voice_budget == "Select...":
+                st.error("⚠️ Please complete all dropdown selections.")
+            elif not voice_script:
+                st.error("⚠️ Please provide a call script / greeting.")
+            elif not voice_consent:
+                st.error("⚠️ Please agree to receive communications.")
+            else:
+                form_data = {
+                    "type": "AI Voice Assistant",
+                    "name": voice_name, "email": voice_email, "phone": voice_phone,
+                    "company": voice_company, "title": voice_title, "industry": voice_industry,
+                    "current_phone_system": voice_current, "monthly_calls": voice_call_vol,
+                    "missed_calls": voice_missed, "use_cases": ", ".join(voice_use_cases),
+                    "languages": ", ".join(voice_languages), "budget": voice_budget,
+                    "persona": voice_persona, "call_script": voice_script,
+                    "top_faqs": voice_faqs, "calendar_system": voice_calendar,
+                    "crm": voice_crm, "timeline": voice_timeline,
+                    "notes": voice_notes, "submission_date": datetime.now().isoformat()
+                }
+                send_to_n8n(form_data)
+                _generic_consult_admin_email(form_data, "AI Voice Assistant", "🎙")
+                _generic_consult_confirmation(voice_email, voice_name, "AI Voice Assistant", "🎙",
+                    ["Custom AI voice agent built for your business",
+                     "24/7 inbound call answering & lead qualification",
+                     "Automatic appointment booking integration",
+                     "Outbound follow-up call sequences",
+                     "Full call transcripts, summaries & CRM sync",
+                     "Ongoing optimization & support"])
+                st.session_state["voice_submitted"] = True
+                st.rerun()
+
+# ══════════════════════════════════════════════
+# TAB 8 (tab5 var) — SIGN UP FOR NEXT EVENT  (LAST TAB)
 # ══════════════════════════════════════════════
 with tab5:
     st.markdown("<div class='section-hdr'><h2>🎟 Sign Up for The Next AI Meet Up — March 27, 2026</h2></div>",
@@ -1046,3 +1557,4 @@ st.markdown(f"""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
