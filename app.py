@@ -516,7 +516,7 @@ for row_keys in [row1_keys, row2_keys]:
               <div class="cprice">{meta['price']}</div>
             </div>
             """, unsafe_allow_html=True)
-            if st.button(f"Select  {meta['icon']}", key=f"sel_{key}", use_container_width=True):
+            if st.button(f"Select  {meta['icon']}", key=f"sel_{key}", use_container_width=True):  # noqa
                 for k, v in DEFAULTS.items():
                     st.session_state[k] = v
                 st.session_state.contract_type = key
@@ -751,7 +751,7 @@ with info_col:
     """, unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown("")
-    if st.button("🔄 Clear Signature", use_container_width=True):
+    if st.button("🔄 Clear Signature", use_container_width=True):  # noqa
         st.rerun()
 
 # ── Step 5 — Generate & Download ─────────────────────────────────────────────
@@ -768,7 +768,7 @@ st.markdown('<div class="box box-info">📥 Click the button below to generate y
 
 _, btn_col, _ = st.columns([1, 2, 1])
 with btn_col:
-    generate_btn = st.button("📥 Generate Signed Agreement PDF", type="primary", use_container_width=True)
+    generate_btn = st.button("📥 Generate Signed Agreement PDF", type="primary", use_container_width=True)  # noqa
 
 if generate_btn:
     if canvas_result.image_data is None or canvas_result.image_data.sum() == 0:
@@ -904,7 +904,7 @@ if st.session_state.pdf_ready and st.session_state.pdf_bytes:
             data=st.session_state.pdf_bytes,
             file_name=st.session_state.pdf_filename,
             mime="application/pdf",
-            use_container_width=True,
+            use_container_width=True,  # noqa
         )
 
     if EMAIL_ADDRESS:
